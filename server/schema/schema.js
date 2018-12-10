@@ -3,7 +3,7 @@ const _ = require('lodash');
 const Book = require('../models/book');
 const Author = require('../models/author');
 
-
+// all the types/ arguments that we need that is provided by graphql
 const {GraphQLObjectType,
        GraphQLString,
        GraphQLSchema,
@@ -13,13 +13,13 @@ const {GraphQLObjectType,
        GraphQLNonNull
       } = graphql;
 
-// These are what is held in the data i think
+// 
 const BookType = new GraphQLObjectType({
   name:'Book',
   fields:() => ({
-    id:{type: GraphQLID},
-    name:{type: GraphQLString},
-    genre:{type: GraphQLString},
+    id:{type: GraphQLID}, // Is input of a string but not intended to be human-readable (such as the ID given in a DB) 
+    name:{type: GraphQLString}, // Is input of a string 
+    genre:{type: GraphQLString}, // Is input of a string 
     author:{
       type: AuthorType,
       resolve(parent,args){
@@ -88,13 +88,15 @@ const RootQuery = new GraphQLObjectType({
 });
 
 // This is adding the data to the Mongodb up in the cloud
+// mutation is the word for either adding, updating and removing data from an api call to the DB
+// In this example we have only done the add mutation 
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     addAuthor:{
       type: AuthorType,
       args:{
-        name:{ type: new GraphQLNonNull (GraphQLString)},
+        name:{ type: new GraphQLNonNull (GraphQLString)}, // NonNull a value has to be given - think also ! 
         age: { type: new GraphQLNonNull (GraphQLInt)}
       },
       resolve(parent,args){
@@ -105,6 +107,7 @@ const Mutation = new GraphQLObjectType({
         return author.save();
       }
    },
+
    addBook:{
     type:BookType,
     args:{
